@@ -230,11 +230,26 @@
     };
   }
 
-  function getMyVote() {
-    try { return localStorage.getItem('hotdog-myvote'); } catch(e) { return null; }
+  async function fetchVersion() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.vote_version&select=value`, { headers: HEADERS });
+    const rows = await res.json();
+    return rows[0]?.value || '1';
   }
-  function setMyVote(choice) {
-    try { localStorage.setItem('hotdog-myvote', choice); } catch(e) {}
+
+  function getMyVote(version) {
+    try {
+      const saved = localStorage.getItem('hotdog-myvote');
+      const savedVersion = localStorage.getItem('hotdog-vote-version');
+      if (savedVersion !== version) return null;
+      return saved;
+    } catch(e) { return null; }
+  }
+
+  function setMyVote(choice, version) {
+    try {
+      localStorage.setItem('hotdog-myvote', choice);
+      localStorage.setItem('hotdog-vote-version', version);
+    } catch(e) {}
   }
 
   function launchConfetti() {
@@ -258,15 +273,27 @@
 
   function App() {
     const [votes, setVotes] = useState({ yes: 0, no: 0 });
-    const [myVote, setMyVoteState] = useState(getMyVote);
+    const [myVote, setMyVoteState] = useState(null);
+    const [version, setVersion] = useState(null);
     const [loading, setLoading] = useState(true);
     const [bumping, setBumping] = useState(false);
     const bumpTimeout = useRef(null);
 
     useEffect(() => {
-      fetchVotes().then(v => { setVotes(v); setLoading(false); });
-      // Poll every 10 seconds so friends' votes show up live
-      const interval = setInterval(() => {
+      async function init() {
+        const v = await fetchVersion();
+        setVersion(v);
+        setMyVoteState(getMyVote(v));
+        const votes = await fetchVotes();
+        setVotes(votes);
+        setLoading(false);
+      }
+      init();
+      // Poll every 10 seconds so friends's votes show up live
+      const interval = setInterval(async () => {
+        const v = await fetchVersion();
+        setVersion(v);
+        setMyVoteState(prev => getMyVote(v));
         fetchVotes().then(setVotes);
       }, 10000);
       return () => clearInterval(interval);
@@ -275,7 +302,7 @@
     async function vote(choice) {
       if (myVote) return;
       setMyVoteState(choice);
-      setMyVote(choice);
+      setMyVote(choice, version);
       const next = { ...votes, [choice]: votes[choice] + 1 };
       setVotes(next);
       launchConfetti();
