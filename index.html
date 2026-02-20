@@ -201,11 +201,16 @@
   }
 
   async function submitVote(choice) {
-    await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
+    const res = await fetch('https://rfpxocurlmubkuurzowu.supabase.co/functions/v1/swift-endpoint', {
       method: 'POST',
-      headers: HEADERS,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+      },
       body: JSON.stringify({ choice })
     });
+    const data = await res.json();
+    return data.error === 'already_voted' ? 'already_voted' : 'ok';
   }
 
   const VERDICTS = {
