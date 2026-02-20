@@ -155,6 +155,30 @@
     .arg-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 3px; }
     .arg-text { font-size: 0.8rem; color: var(--ink); line-height: 1.5; }
 
+    .merch {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 32px 28px;
+      border: 3px dashed #F5C400;
+      border-radius: 18px;
+    }
+    .merch-heading { font-family: 'Boogaloo', cursive; font-size: 1.4rem; color: #1A0A00; margin-bottom: 8px; }
+    .merch-sub { font-size: 0.78rem; color: #8B6040; margin-bottom: 20px; font-style: italic; }
+    .merch-btn {
+      display: inline-block;
+      background: #1A0A00;
+      color: #F5C400;
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.2rem;
+      padding: 14px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform .15s ease, box-shadow .15s ease;
+      letter-spacing: 0.04em;
+    }
+    .merch-btn:hover { transform: translateY(-3px); box-shadow: 4px 4px 0 #F5C400; }
+
     footer { text-align: center; font-size: 0.7rem; color: #C4A882; font-style: italic; line-height: 1.7; }
     footer strong { display: block; font-family: 'Boogaloo', cursive; font-size: 1rem; color: var(--muted); font-style: normal; margin-bottom: 6px; }
 
@@ -413,6 +437,14 @@
               <div className="arg-label">Against · not a sandwich</div>
               <div className="arg-text">A hot dog has its own identity, its own culture, its own condiment ecosystem. It deserves recognition as its own category.</div>
             </div>
+          </div>
+
+          <div className="merch">
+            <div className="merch-heading">👕 Defend Your Stance</div>
+            <p className="merch-sub">Rep your side. Shirts, hats, stickers and more.</p>
+            <a className="merch-btn" href="https://HotdogSandwich.redbubble.com" target="_blank" rel="noopener noreferrer">
+              Shop the Merch 🌭
+            </a>
           </div>
 
           <footer>
